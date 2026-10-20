@@ -267,6 +267,7 @@
             object-fit: cover;
             border-radius: 12px;
             display: block;
+            background: #fbe3ea;
         }
 
         .upload-btn {
@@ -468,8 +469,8 @@
         
         <div class="photo-container">
             <div class="photo-frame">
-                <!-- Đã cập nhật ảnh cử nhân tốt nghiệp xinh xắn của bạn tại đây -->
-                <img src="anh-khoanh-khac.jpg" id="displayImg" alt="Khoảnh khắc đẹp">
+                <!-- Ảnh mặc định sẽ hiển thị ngay cả khi chưa có file local; nếu upload file anh-khoanh-khac.jpg thì sẽ dùng file đó -->
+                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" id="displayImg" alt="Khoảnh khắc đẹp" onerror="this.onerror=null; this.src='anh-khoanh-khac.jpg';">
             </div>
 
             <label for="imageInput" class="upload-btn">
@@ -628,7 +629,7 @@
         }
 
         // 4. Hiệu ứng gõ chữ
-        const letterMessage = `Gửi cậu,\n\nNhân ngày Phụ Nữ Việt Nam 20/10, Tớ chúc cậu luôn luôn tươi cười rạng rỡ, gặp thật nhiều may mắn và lúc nào cũng ngập tràn hạnh phúc.\n\nCảm ơn cậu vì đã xuất hiện và khiến cuộc sống của tớ trở nên sắc màu hơn. Chúc cậu có một ngày lễ ngập tràn hoa, quà và nụ cười thật tươi nhé! 🌸✨`;
+        const letterMessage = `Gửi cậu,\n\nNhân ngày Phụ Nữ Việt Nam 20/10, Tớ chúc cậu luôn luôn tươi cười rạng rỡ, gặp thật nhiều may mắn và lúc nào cũng hạnh phúc. Cậu là người đặc biệt với tớ, và tớ muốn dành những khoảnh khắc đẹp nhất cho cậu. Mong rằng mỗi ngày của cậu luôn có niềm vui, nụ cười và những điều tốt đẹp ngập tràn.\n\nDù có thể không có quà đắt tiền hay lời nói quá lãng mạn, tớ muốn cậu biết rằng: tớ luôn trân trọng và yêu quý cậu rất nhiều. Chúc cậu có một ngày 20/10 thật đáng nhớ, thật vui, thật ấm áp, và luôn được yêu thương như cậu xứng đáng.\n\nYêu cậu rất nhiều 💖`;
 
         function startTypewriter() {
             let i = 0;
@@ -703,7 +704,6 @@
                     isPlaying = true;
                     musicText.innerText = "Tắt nhạc";
                 }).catch(() => {});
-                
             }
         }
 
