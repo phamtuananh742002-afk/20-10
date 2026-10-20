@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi cậu 💖</title>
+    <!-- Phông chữ Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fff0f3;
+            --pink-main: #ff4d6d;
+            --pink-soft: #ff85a1;
+            --pink-tag: #ffe3e8;
+            --text-color: #555;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#ffb3c1 0.8px, transparent 0.8px);
+            background-size: 24px 24px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Nút Phát Nhạc cố định góc phải */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffffff;
+            color: var(--pink-main);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.25);
+        }
+
+        /* Quản lý các trang */
+        .page {
+            display: none;
+            text-align: center;
+            max-width: 650px;
+            width: 100%;
+            z-index: 10;
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= TRANG 1 ================= */
+        .tag-date {
+            display: inline-block;
+            background-color: #ffffff;
+            border: 1px solid #ffd1dc;
+            color: var(--pink-main);
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(255, 182, 193, 0.2);
+        }
+
+        h1.title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.8rem;
+            color: var(--pink-main);
+            text-shadow: 0 0 12px rgba(255, 77, 109, 0.2);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        p.subtitle {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .countdown-container {
+            background: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(255, 133, 161, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .time-box {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .time-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--pink-main);
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #888;
+        }
+
+        .colon {
+            color: var(--pink-soft);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* Nút Mở Quà */
+        .btn-open-gift {
+            background: var(--pink-main);
+            color: white;
+            border: none;
+            padding: 14px 36px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.35);
+            transition: all 0.3s ease;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .btn-open-gift.unlocked {
+            background: #ff4d6d;
+            animation: pulse 1.5s infinite;
+        }
+
+        .btn-open-gift.unlocked:hover {
+            background: #e63956;
+            transform: scale(1.08);
+        }
+
+        .btn-open-gift.disabled {
+            background: #cccccc !important;
+            color: #666666 !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
+            animation: none !important;
+            opacity: 0.8;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 77, 109, 0); }
+        }
+
+        /* ================= TRANG 2 ================= */
+        .gift-section-title {
+            color: var(--pink-main);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .gift-grid {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .gift-card {
+            background: #ffffff;
+            padding: 25px 20px;
+            border-radius: 20px;
+            width: 240px;
+            box-shadow: 0 10px 25px rgba(255, 133, 161, 0.15);
+            border: 2px dashed #ffb3c1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .gift-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            border-color: var(--pink-main);
+            box-shadow: 0 15px 30px rgba(255, 77, 109, 0.25);
+        }
+
+        .gift-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .gift-title {
+            font-weight: 700;
+            color: var(--pink-main);
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .gift-desc {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* ================= TRANG 3: PHẦN QUÀ 1 ================= */
+        .photo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .photo-frame {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(255, 77, 109, 0.18);
+            display: inline-block;
+            transform: rotate(-2deg);
+            transition: transform 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .photo-frame:hover {
+            transform: rotate(0deg) scale(1.03);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            max-width: 320px;
+            max-height: 420px;
+            object-fit: cover;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .upload-btn {
+            background: var(--pink-tag);
+            color: var(--pink-main);
+            border: 1px dashed var(--pink-main);
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .upload-btn:hover {
+            background: var(--pink-soft);
+            color: white;
+        }
+
+        #imageInput { display: none; }
+
+        .letter-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 133, 161, 0.15);
+            text-align: left;
+            margin-bottom: 25px;
+            border: 2px dashed #ffb3c1;
+            min-height: 160px;
+        }
+
+        .letter-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-line;
+        }
+
+        .question-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(255, 133, 161, 0.12);
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            position: relative;
+            min-height: 50px;
+        }
+
+        .btn-action {
+            padding: 10px 25px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .btn-yes {
+            background: var(--pink-main);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        .btn-yes:hover {
+            background: #e63956;
+            transform: scale(1.05);
+        }
+
+        .btn-no {
+            background: #e0e0e0;
+            color: #555;
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        /* TRANG 4: PHẦN QUÀ 2 */
+        .gift2-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 133, 161, 0.2);
+            border: 2px dashed var(--pink-main);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* TRANG 5: HỎI XEM CÓ THÍCH MÓN QUÀ KHÔNG */
+        .like-question-card {
+            background: #ffffff;
+            padding: 30px 20px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 133, 161, 0.15);
+            border: 2px dashed var(--pink-main);
+        }
+
+        .btn-dislike {
+            background: #e0e0e0;
+            color: #555;
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .final-like-msg {
+            display: none;
+            margin-top: 25px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--pink-main);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .heart-fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Khung trái tim bay nền -->
+    <div class="heart-fireworks" id="fireworksContainer"></div>
+
+    <!-- Nút Bật/Tắt Nhạc cố định góc phải -->
+    <button class="music-btn" id="musicBtn">
+        🎵 <span id="musicText">Phát nhạc</span>
+    </button>
+
+    <!-- ================= TRANG 1 ================= -->
+    <div class="page active" id="page1">
+        <div class="tag-date">✨ Ngày Phụ Nữ Việt Nam 20/10 ✨</div>
+        
+        <h1 class="title">Gửi cậu <span style="color: #ff4d6d;">❤️</span></h1>
+
+        <p class="subtitle">
+            Hôm nay là một ngày vô cùng đặc biệt. Tớ có chuẩn bị một món quà nho nhỏ để dành tặng cho cô gái xinh xắn, đáng yêu nhất thế gian!
+        </p>
+
+        <!-- Đồng hồ đếm ngược -->
+        <div class="countdown-container">
+            <div class="time-box"><span class="time-number" id="days">00</span><span class="time-label">NGÀY</span></div>
+            <span class="colon">:</span>
+            <div class="time-box"><span class="time-number" id="hours">00</span><span class="time-label">GIỜ</span></div>
+            <span class="colon">:</span>
+            <div class="time-box"><span class="time-number" id="minutes">00</span><span class="time-label">PHÚT</span></div>
+            <span class="colon">:</span>
+            <div class="time-box"><span class="time-number" id="seconds">00</span><span class="time-label">GIÂY</span></div>
+        </div>
+
+        <br>
+        <!-- Nút Mở Quà -->
+        <button class="btn-open-gift disabled" id="openGiftBtn" onclick="checkAndOpenGift()">
+            🔒 Chưa tới giờ mở quà (Đợi đếm ngược nhé!)
+        </button>
+    </div>
+
+    <!-- ================= TRANG 2 ================= -->
+    <div class="page" id="page2">
+        <h2 class="gift-section-title">Chọn Một Món Quà cậu Thích Nhé! ✨</h2>
+        <p style="color: #666; margin-bottom: 10px;">Tớ có chuẩn bị sẵn 2 bí mật siêu đáng yêu dưới đây nè:</p>
+
+        <div class="gift-grid">
+            <!-- Hộp quà 1 -->
+            <div class="gift-card" onclick="goToGift1()">
+                <div class="gift-icon">🎁</div>
+                <div class="gift-title">Phần Quà Số 1</div>
+                <div class="gift-desc">Một bức thư bí mật & ảnh con gái xinh xắn đáng yêu 💕</div>
+            </div>
+
+            <!-- Hộp quà 2 -->
+            <div class="gift-card" onclick="goToGift2()">
+                <div class="gift-icon">💐</div>
+                <div class="gift-title">Phần Quà Số 2</div>
+                <div class="gift-desc">Một tấm vé đặc biệt 🌸</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= TRANG 3: PHẦN QUÀ 1 ================= -->
+    <div class="page" id="page3">
+        <h2 class="gift-section-title">Gửi Tới Cô Gái Đáng Yêu 🌹</h2>
+        
+        <div class="photo-container">
+            <div class="photo-frame">
+                <!-- Đã cập nhật ảnh cử nhân tốt nghiệp xinh xắn của bạn tại đây -->
+                <img src="anh-khoanh-khac.jpg" id="displayImg" alt="Khoảnh khắc đẹp">
+            </div>
+
+            <label for="imageInput" class="upload-btn">
+                📸 Thay đổi ảnh khác nếu muốn
+            </label>
+            <input type="file" id="imageInput" accept="image/*" onchange="previewImage(event)">
+        </div>
+
+        <div class="letter-card">
+            <div class="letter-text" id="typewriterText"></div>
+        </div>
+
+        <div class="question-box">
+            <p style="font-weight: 700; color: #333;">Cậu có muốn mở tiếp Phần Quà Số 2 cực bí mật không? 🤭</p>
+            <div class="btn-group">
+                <button class="btn-action btn-yes" onclick="goToGift2()">Có chứ! ✨</button>
+                <button class="btn-action btn-no" id="btnNo" onmouseover="moveNoButton()" onclick="moveNoButton()" ontouchstart="moveNoButton()">Bỏ qua 😜</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= TRANG 4: PHẦN QUÀ 2 ================= -->
+    <div class="page" id="page4">
+        <h2 class="gift-section-title">Tấm Vé Đặc Biệt 🎟️</h2>
+
+        <div class="gift2-card">
+            <p style="font-size: 1.2rem; color: var(--pink-main); font-weight: 700; margin-bottom: 15px;">
+                🎉 CHÚC MỪNG CẬU ĐÃ SỞ HỮU TẤM VÉ HẸN HÒ TRỌN ĐỜI!
+            </p>
+            <p style="color: #555; line-height: 1.8; font-size: 1.05rem;">
+                Tấm vé này có giá trị đổi lấy:<br>
+                ✨ 1 Buổi xem phim & ăn tối bất kỳ lúc nào cậu muốn.<br>
+                ✨ Phần quà bí mật.<br>
+                ✨ Một người luôn lắng nghe, đồng hành cùng cậu mỗi ngày.
+            </p>
+            <br>
+            <p style="font-weight: 700; color: var(--pink-main);">Chúc cậu ngày 20/10 thật nhiều niềm vui và hạnh phúc nhé! 💖🌹</p>
+        </div>
+
+        <button class="btn-action btn-yes" onclick="goToPage(5)">Tiếp tục nè ✨</button>
+    </div>
+
+    <!-- ================= TRANG 5: CÂU HỎI TƯƠNG TÁC ================= -->
+    <div class="page" id="page5">
+        <h2 class="gift-section-title">Cậu Ơi... 🤭</h2>
+
+        <div class="like-question-card">
+            <p style="font-size: 1.25rem; font-weight: 700; color: #333; margin-bottom: 20px;">
+                Cậu có thích món quà bất ngờ này tớ làm tặng cậu không? 🥰
+            </p>
+
+            <div class="btn-group" id="likeBtnGroup">
+                <button class="btn-action btn-yes" onclick="confirmLike()">Thích chứ! 💕</button>
+                <button class="btn-action btn-dislike" id="btnDislike" onmouseover="moveDislikeButton()" onclick="moveDislikeButton()" ontouchstart="moveDislikeButton()">Không thích 😛</button>
+            </div>
+
+            <div class="final-like-msg" id="finalLikeMsg">
+                Hì hì, tớ biết ngay là cậu sẽ thích mà! Chúc cậu có một ngày 20/10 thật ngập tràn nụ cười và hạnh phúc nhé! 🥰💖🌸
+            </div>
+        </div>
+    </div>
+
+    <!-- NHẠC NỀN DỊU DÀNG EM ĐẾN -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="nhac-hay.mp3" type="audio/mpeg">
+        <source src="https://files.catbox.moe/u8g2vg.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 1. Quản lý chuyển trang
+        function goToPage(pageNumber) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            const targetPage = document.getElementById('page' + pageNumber);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+        }
+
+        function goToGift1() {
+            goToPage(3);
+            if (!window.isTyped) {
+                window.isTyped = true;
+                startTypewriter();
+            }
+        }
+
+        function goToGift2() {
+            goToPage(4);
+            startHeartFireworks();
+        }
+
+        // 2. Đồng hồ đếm ngược đến 20/10
+        const targetDate = new Date("Oct 20, 2026 00:00:00").getTime();
+        let isTimeReached = false;
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            const openGiftBtn = document.getElementById("openGiftBtn");
+
+            if (distance <= 0) {
+                isTimeReached = true;
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+
+                if (openGiftBtn) {
+                    openGiftBtn.classList.remove("disabled");
+                    openGiftBtn.classList.add("unlocked");
+                    openGiftBtn.innerHTML = "🎁 Nhấn vào đây để mở quà ➔";
+                }
+            } else {
+                isTimeReached = false;
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerText = String(days).padStart(2, '0');
+                document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+                document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+                document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+
+                if (openGiftBtn) {
+                    openGiftBtn.classList.add("disabled");
+                    openGiftBtn.classList.remove("unlocked");
+                    openGiftBtn.innerHTML = "🔒 Chưa tới giờ mở quà (Chờ đếm ngược nhé!)";
+                }
+            }
+        }
+
+        function checkAndOpenGift() {
+            if (isTimeReached) {
+                goToPage(2);
+            } else {
+                alert("Hì hì, chưa tới giờ mở quà đâu! Cậu kiên nhẫn đợi đồng hồ đếm ngược về 00:00:00 nhé 💖");
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // 3. Upload xem trước ảnh
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById('displayImg').src = reader.result;
+            };
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        // 4. Hiệu ứng gõ chữ
+        const letterMessage = `Gửi cậu,\n\nNhân ngày Phụ Nữ Việt Nam 20/10, Tớ chúc cậu luôn luôn tươi cười rạng rỡ, gặp thật nhiều may mắn và lúc nào cũng ngập tràn hạnh phúc.\n\nCảm ơn cậu vì đã xuất hiện và khiến cuộc sống của tớ trở nên sắc màu hơn. Chúc cậu có một ngày lễ ngập tràn hoa, quà và nụ cười thật tươi nhé! 🌸✨`;
+
+        function startTypewriter() {
+            let i = 0;
+            const element = document.getElementById('typewriterText');
+            element.innerHTML = "";
+            function typing() {
+                if (i < letterMessage.length) {
+                    element.innerHTML += letterMessage.charAt(i);
+                    i++;
+                    setTimeout(typing, 35);
+                }
+            }
+            typing();
+        }
+
+        // 5. Nút Bỏ Qua chạy trốn (Trang 3)
+        function moveNoButton() {
+            const btnNo = document.getElementById('btnNo');
+            const randomX = (Math.random() - 0.5) * 180;
+            const randomY = (Math.random() - 0.5) * 80;
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // 6. Nút Không Thích chạy trốn (Trang 5)
+        function moveDislikeButton() {
+            const btnDislike = document.getElementById('btnDislike');
+            const randomX = (Math.random() - 0.5) * 220;
+            const randomY = (Math.random() - 0.5) * 100;
+            btnDislike.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        function confirmLike() {
+            document.getElementById('likeBtnGroup').style.display = 'none';
+            document.getElementById('finalLikeMsg').style.display = 'block';
+            startHeartFireworks();
+        }
+
+        // 7. Hiệu ứng Trái tim bay ở Quà 2 & Trang 5
+        let fireworksInterval = null;
+        function startHeartFireworks() {
+            if (fireworksInterval) return;
+            const container = document.getElementById('fireworksContainer');
+            fireworksInterval = setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerText = ['💖', '✨', '🌸', '💝'][Math.floor(Math.random() * 4)];
+                heart.style.position = 'absolute';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.bottom = '-20px';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                heart.style.transition = 'all 4s linear';
+                heart.style.opacity = '1';
+                container.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.style.transform = `translateY(-105vh) scale(1.5)`;
+                    heart.style.opacity = '0';
+                }, 50);
+
+                setTimeout(() => heart.remove(), 4000);
+            }, 300);
+        }
+
+        // 8. PHÁT NHẠC XUYÊN SUỐT TỪ ĐẦU ĐẾN CUỐI
+        const musicBtn = document.getElementById('musicBtn');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicText = document.getElementById('musicText');
+        let isPlaying = false;
+
+        function playAudio() {
+            if (!isPlaying) {
+                bgMusic.play().then(() => {
+                    isPlaying = true;
+                    musicText.innerText = "Tắt nhạc";
+                }).catch(() => {});
+                
+            }
+        }
+
+        document.addEventListener('click', playAudio, { once: true });
+        document.addEventListener('touchstart', playAudio, { once: true });
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isPlaying) {
+                bgMusic.pause();
+                musicText.innerText = "Phát nhạc";
+                isPlaying = false;
+            } else {
+                bgMusic.play();
+                musicText.innerText = "Tắt nhạc";
+                isPlaying = true;
+            }
+        });
+    </script>
+</body>
+</html>
